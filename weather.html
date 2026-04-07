@@ -8,17 +8,19 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0b1120;
-      --surface:   #111827;
-      --card:      #1a2438;
-      --border:    rgba(255,255,255,0.08);
-      --text:      #e2e8f0;
-      --muted:     #64748b;
-      --blue:      #3b82f6;
-      --cyan:      #22d3ee;
-      --snow:      #bae6fd;
-      --rain:      #60a5fa;
-      --sun:       #fbbf24;
+      --bg:       #0b1120;
+      --surface:  #111827;
+      --card:     #1a2438;
+      --border:   rgba(255,255,255,0.08);
+      --text:     #e2e8f0;
+      --muted:    #64748b;
+      --cyan:     #22d3ee;
+      --snow:     #bae6fd;
+      --rain:     #60a5fa;
+      --sun:      #fbbf24;
+      --green:    #34d399;
+      --red:      #f87171;
+      --orange:   #fb923c;
     }
 
     body {
@@ -26,223 +28,223 @@
       color: var(--text);
       font-family: 'Segoe UI', system-ui, sans-serif;
       min-height: 100vh;
-      padding: 24px 16px 48px;
+      padding: 24px 16px 56px;
     }
 
     /* ── Header ── */
     header {
       text-align: center;
-      margin-bottom: 36px;
+      margin-bottom: 32px;
     }
-    header h1 {
-      font-size: 1.9rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
+    header h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.5px; }
     header h1 span { color: var(--cyan); }
-    header p {
+    .source-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
       color: var(--muted);
-      font-size: 0.85rem;
-      margin-top: 4px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 3px 12px;
+      margin-top: 8px;
     }
-    #updated {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 6px;
-    }
+    .source-tag a { color: var(--cyan); text-decoration: none; }
+    .source-tag a:hover { text-decoration: underline; }
+    #updated { font-size: 0.75rem; color: var(--muted); margin-top: 6px; }
 
-    /* ── Layout ── */
-    .locations {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 24px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    /* ── Location card ── */
-    .loc-card {
+    /* ── Bulletin meta bar ── */
+    .meta-bar {
+      max-width: 960px;
+      margin: 0 auto 24px;
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 20px;
+      border-radius: 14px;
+      padding: 14px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 28px;
+      align-items: center;
+    }
+    .meta-item { font-size: 0.82rem; display: flex; align-items: center; gap: 6px; }
+    .meta-item .label { color: var(--muted); }
+    .meta-item .val   { font-weight: 600; }
+    .reliability-good   { color: var(--green); }
+    .reliability-medium { color: var(--orange); }
+    .reliability-poor   { color: var(--red); }
+    .pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 99px;
+      border: 1px solid;
+    }
+    .pill-avl { background: rgba(251,146,60,0.12); color: var(--orange); border-color: rgba(251,146,60,0.25); }
+
+    /* ── Section title ── */
+    .section-title {
+      max-width: 960px;
+      margin: 0 auto 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 4px;
+    }
+
+    /* ── Forecast grid ── */
+    .forecast-grid {
+      max-width: 960px;
+      margin: 0 auto 36px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 14px;
+    }
+
+    .day-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
       overflow: hidden;
     }
+    .day-card.today { border-color: rgba(34,211,238,0.3); }
+    .day-card.today::before {
+      content: 'TODAY';
+      position: absolute;
+      top: 12px; right: 14px;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+    }
+    .day-card.low-confidence { border-color: rgba(100,116,139,0.3); opacity: 0.85; }
+    .day-card.low-confidence::before {
+      content: 'LOW CONFIDENCE';
+      position: absolute;
+      top: 12px; right: 14px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
 
-    .loc-header {
-      padding: 20px 22px 16px;
-      border-bottom: 1px solid var(--border);
+    .day-header {
       display: flex;
       align-items: flex-start;
-      justify-content: space-between;
       gap: 12px;
     }
-    .loc-header .name { font-size: 1.1rem; font-weight: 700; }
-    .loc-header .elev {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-    .loc-header .badge {
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 99px;
-      background: rgba(34,211,238,0.12);
-      color: var(--cyan);
-      white-space: nowrap;
-      margin-top: 2px;
-    }
+    .day-icon { font-size: 2.4rem; line-height: 1; flex-shrink: 0; }
+    .day-name-wrap {}
+    .day-name { font-size: 1rem; font-weight: 700; }
+    .day-date { font-size: 0.76rem; color: var(--muted); margin-top: 1px; }
 
-    /* ── Current conditions ── */
-    .current {
-      padding: 20px 22px;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0 18px;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-    }
-    .current .wx-icon { font-size: 3.8rem; line-height: 1; }
-    .current .temp-big {
-      font-size: 2.8rem;
-      font-weight: 700;
-      line-height: 1;
-    }
-    .current .wx-desc {
+    .condition-text {
       font-size: 0.88rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-    .current .feels {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 1px;
+      line-height: 1.55;
+      color: #cbd5e1;
+      border-left: 2px solid rgba(34,211,238,0.3);
+      padding-left: 10px;
     }
 
-    .stats {
-      grid-column: 1 / -1;
+    .day-stats {
       display: flex;
-      gap: 18px;
       flex-wrap: wrap;
-      margin-top: 12px;
+      gap: 8px 16px;
     }
-    .stat {
+    .dstat {
       display: flex;
       align-items: center;
       gap: 5px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--muted);
     }
-    .stat .val { color: var(--text); font-weight: 600; }
-    .stat-icon { font-size: 0.95rem; }
+    .dstat .v { color: var(--text); font-weight: 600; }
+    .dstat .snow-v { color: var(--snow); font-weight: 600; }
+    .dstat .rain-v { color: var(--rain); font-weight: 600; }
 
-    /* ── 3-day forecast ── */
-    .forecast-title {
-      padding: 16px 22px 8px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .forecast {
-      padding: 0 12px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .day-row {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 14px;
+    /* ── Current conditions (Open-Meteo) ── */
+    .live-grid {
+      max-width: 960px;
+      margin: 0 auto;
       display: grid;
-      grid-template-columns: 80px 36px 1fr auto auto;
-      align-items: center;
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 16px;
     }
-    .day-name { font-size: 0.88rem; font-weight: 600; }
-    .day-name .date-sub { font-size: 0.72rem; color: var(--muted); font-weight: 400; }
-    .day-icon { font-size: 1.5rem; text-align: center; }
-
-    .precip-bar-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .precip-label {
-      font-size: 0.7rem;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-    }
-    .precip-label .type-snow { color: var(--snow); }
-    .precip-label .type-rain { color: var(--rain); }
-    .bar-track {
-      height: 5px;
-      background: rgba(255,255,255,0.07);
-      border-radius: 99px;
+    .live-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       overflow: hidden;
     }
-    .bar-fill {
-      height: 100%;
-      border-radius: 99px;
-      transition: width 0.6s ease;
+    .live-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
     }
-    .bar-fill.snow { background: var(--snow); }
-    .bar-fill.rain { background: var(--rain); }
-    .bar-fill.none { background: rgba(255,255,255,0.15); width: 0 !important; }
-
-    .temp-range {
-      text-align: right;
-      white-space: nowrap;
-    }
-    .temp-max { font-size: 0.95rem; font-weight: 700; }
-    .temp-min { font-size: 0.78rem; color: var(--muted); }
-
-    .prob-pill {
-      font-size: 0.72rem;
+    .live-header .lname { font-size: 1rem; font-weight: 700; }
+    .live-header .lelev { font-size: 0.76rem; color: var(--muted); margin-top: 2px; }
+    .live-header .lbadge {
+      font-size: 0.68rem;
       font-weight: 700;
-      padding: 2px 8px;
+      padding: 2px 9px;
       border-radius: 99px;
-      text-align: center;
-      min-width: 38px;
+      background: rgba(34,211,238,0.1);
+      color: var(--cyan);
     }
-    .prob-pill.high { background: rgba(96,165,250,0.2); color: var(--rain); }
-    .prob-pill.med  { background: rgba(96,165,250,0.1); color: var(--muted); }
-    .prob-pill.low  { background: rgba(255,255,255,0.05); color: var(--muted); }
+    .live-body {
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0 16px;
+      align-items: center;
+    }
+    .live-icon { font-size: 3.2rem; line-height: 1; }
+    .live-temp { font-size: 2.5rem; font-weight: 700; line-height: 1; }
+    .live-desc { font-size: 0.84rem; color: var(--muted); margin-top: 2px; }
+    .live-feels { font-size: 0.76rem; color: var(--muted); }
+    .live-stats {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 20px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .lstat { font-size: 0.8rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+    .lstat .v { color: var(--text); font-weight: 600; }
 
-    /* ── Loading / Error ── */
-    .loader {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
+    /* ── Loader / error ── */
+    .loader { text-align: center; padding: 60px 20px; color: var(--muted); }
     .spinner {
-      width: 36px; height: 36px;
-      border: 3px solid rgba(255,255,255,0.1);
+      width: 34px; height: 34px;
+      border: 3px solid rgba(255,255,255,0.08);
       border-top-color: var(--cyan);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      margin: 0 auto 14px;
+      margin: 0 auto 12px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    .error-msg {
-      color: #f87171;
-      background: rgba(248,113,113,0.1);
+    .err {
+      color: var(--red);
+      background: rgba(248,113,113,0.08);
       border: 1px solid rgba(248,113,113,0.2);
       border-radius: 10px;
       padding: 12px 16px;
-      font-size: 0.85rem;
-      margin: 8px 0;
+      font-size: 0.84rem;
     }
 
-    @media (max-width: 420px) {
-      .day-row { grid-template-columns: 70px 30px 1fr auto; }
-      .prob-pill { display: none; }
+    @media (max-width: 480px) {
+      .forecast-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -250,199 +252,503 @@
 
 <header>
   <h1>⛰️ <span>Chamonix</span> Weather</h1>
-  <p>Chamonix Village · Aiguille du Midi — rain &amp; snow forecast</p>
+  <div><span class="source-tag">📡 Expert forecast from <a href="https://www.chamonix-meteo.com" target="_blank">chamonix-meteo.com</a> · live conditions from Open-Meteo</span></div>
   <div id="updated"></div>
 </header>
 
-<div class="locations" id="app">
-  <div class="loader"><div class="spinner"></div>Loading weather data…</div>
+<div id="meta-section"></div>
+<div id="bulletin-section">
+  <div class="loader"><div class="spinner"></div>Loading bulletin from chamonix-meteo.com…</div>
+</div>
+
+<div class="section-title" style="margin-top:32px">⚡ Live current conditions</div>
+<div class="live-grid" id="live-section">
+  <div class="loader"><div class="spinner"></div>Loading live data…</div>
 </div>
 
 <script>
-// ─── Config ───────────────────────────────────────────────────────────────────
-const LOCATIONS = [
-  {
-    id: 'chamonix',
-    name: 'Chamonix Village',
-    badge: '🏔 1,035 m',
-    elev: '1,035 m · Mont-Blanc Massif',
-    lat: 45.9237, lon: 6.8694,
-    elevation: 1035,
-  },
-  {
-    id: 'aiguille',
-    name: 'Aiguille du Midi',
-    badge: '🗻 3,842 m',
-    elev: '3,842 m · Summit station',
-    lat: 45.8785, lon: 6.8879,
-    elevation: 3842,
-  },
+// ═══════════════════════════════════════════════════════════
+// TRANSLATION TABLE  (French phrase → English, longest first)
+// ═══════════════════════════════════════════════════════════
+const PHRASES = [
+  // Conditions
+  ['grand beau temps sous tous rapports', 'glorious weather in every respect'],
+  ['grand beau temps', 'glorious weather'],
+  ['très beau temps', 'very fine weather'],
+  ['beau temps', 'fine weather'],
+  ['beau fixe', 'settled fine weather'],
+  ['beau à très beau', 'fine to very fine'],
+  ['beau et chaud', 'fine and warm'],
+  ['grand beau', 'glorious'],
+  ['chaleur estivale sans excès', 'pleasantly summer-like warmth'],
+  ['chaleur estivale', 'summer-like warmth'],
+  ['chaleur caniculaire', 'scorching heat'],
+  ['chaleur', 'warmth'],
+  ['coup de froid', 'cold snap'],
+  ['temps gris', 'grey skies'],
+  ['temps maussade', 'gloomy weather'],
+  ['temps maussade', 'gloomy conditions'],
+  ['temps très incertain', 'very uncertain conditions'],
+  ['temps incertain', 'uncertain conditions'],
+  ['temps variable', 'variable conditions'],
+  ['temps perturbé', 'unsettled weather'],
+  ['premier refroidissement', 'first cold spell'],
+  ['refroidissement', 'temperature drop'],
+  ['dégradation', 'deterioration'],
+  ['amélioration', 'improvement'],
+  // Sky
+  ['ciel clair', 'clear sky'],
+  ['ciel voilé', 'veiled sky'],
+  ['ciel couvert', 'overcast sky'],
+  ['ciel nuageux', 'cloudy sky'],
+  ['ciel dégagé', 'clear sky'],
+  ['quelques nuages', 'some clouds'],
+  ['nuages épars', 'scattered clouds'],
+  ['voile de cirrus', 'cirrus veil'],
+  ['cirrus', 'high cirrus clouds'],
+  ['cumulus de beau temps', 'fair-weather cumulus'],
+  ['quelques cumulus', 'some cumulus clouds'],
+  ['cumulus', 'cumulus clouds'],
+  ['stratus', 'low stratus cloud'],
+  ['brouillard', 'fog'],
+  ['brume', 'mist'],
+  ['nuageux', 'cloudy'],
+  ['couvert', 'overcast'],
+  ['ensoleillement', 'sunshine'],
+  ['ensoleillé', 'sunny'],
+  ['soleil', 'sun'],
+  // Precip
+  ['limite pluie‑neige', 'rain-snow limit'],
+  ['limite pluie-neige', 'rain-snow limit'],
+  ['pluie verglaçante', 'freezing rain'],
+  ['pluie', 'rain'],
+  ['averses de neige', 'snow showers'],
+  ['averse de neige', 'snow shower'],
+  ['averses neigeuses', 'snowy showers'],
+  ['quelques averses', 'scattered showers'],
+  ['averses', 'showers'],
+  ['flocons de neige', 'snowflakes'],
+  ['flocons', 'snow flurries'],
+  ['chutes de neige', 'snowfall'],
+  ['chute de neige', 'snowfall'],
+  ['neige fraîche', 'fresh snow'],
+  ['neige soufflée', 'blowing snow'],
+  ['neige', 'snow'],
+  ['verglas', 'black ice'],
+  ['grêle', 'hail'],
+  ['précipitations', 'precipitation'],
+  ['pas de précipitations', 'no precipitation'],
+  ['sans précipitation', 'no precipitation'],
+  // Wind
+  ['vent violent', 'violent wind'],
+  ['vent fort', 'strong wind'],
+  ['vent modéré', 'moderate wind'],
+  ['vent faible', 'light wind'],
+  ['vent nul', 'calm'],
+  ['vent de secteur nord', 'northerly wind'],
+  ['flux NW fort', 'strong NW airflow'],
+  ['flux NW', 'NW airflow'],
+  ['flux SW', 'SW airflow'],
+  ['flux NE', 'NE airflow'],
+  ['flux N', 'northerly flow'],
+  ['rafales', 'gusts'],
+  ['vent', 'wind'],
+  ['turbulences', 'turbulence'],
+  ['calme', 'calm'],
+  // Temps of day
+  ['en début de matinée', 'in the early morning'],
+  ['en matinée', 'in the morning'],
+  ['début d\'après‑midi', 'early afternoon'],
+  ['l\'après‑midi', 'in the afternoon'],
+  ['en soirée', 'in the evening'],
+  ['la nuit', 'during the night'],
+  ['à l\'aube', 'at dawn'],
+  ['au lever du jour', 'at sunrise'],
+  ['en fin de journée', 'by end of day'],
+  ['dernier jour', 'last fine day'],
+  // Temperature qualifiers
+  ['températures', 'temperatures'],
+  ['température', 'temperature'],
+  ['au‑dessus des normales saisonnières', 'above seasonal norms'],
+  ['au-dessus des normales', 'above average'],
+  ['nettement au-dessus', 'well above average'],
+  ['isotherme 0°C', '0°C isotherm'],
+  ['isotherme -10°C', '-10°C isotherm'],
+  ['isotherme', 'isotherm'],
+  ['vallée', 'valley'],
+  ['altitude', 'altitude'],
+  ['sommet', 'summit'],
+  ['versant', 'slope'],
+  ['massif', 'massif'],
+  // Specific
+  ['suite', 'continuing'],
+  ['dorsale d\'altitude', 'upper-level ridge'],
+  ['anticyclone', 'high-pressure system'],
+  ['dépression', 'low-pressure system'],
+  ['front froid', 'cold front'],
+  ['front chaud', 'warm front'],
+  ['air froid', 'cold air'],
+  ['air chaud', 'warm air'],
+  ['air saharien', 'Saharan air'],
+  ['risque d\'avalanche', 'avalanche risk'],
+  ['risque limité', 'limited risk'],
+  ['enneigement', 'snow cover'],
+  // Common connectors
+  ['sous tous rapports', 'in every respect'],
+  ['à l\'aiguille', 'at the Aiguille'],
+  ['en vallée', 'in the valley'],
+  ['par endroits', 'in places'],
+  ['localement', 'locally'],
+  ['probablement', 'probably'],
+  ['notamment', 'notably'],
+  ['ensuite', 'then'],
+  ['puis', 'then'],
+  ['avec', 'with'],
+  ['sans', 'without'],
+  ['vers', 'around'],
+  ['avant', 'before'],
+  ['après', 'after'],
+  ['début', 'start of'],
+  ['fin', 'end of'],
+  ['entre', 'between'],
+  ['et', 'and'],
+  ['ou', 'or'],
+  ['sur', 'over'],
+  ['très', 'very'],
+  ['assez', 'quite'],
+  ['peu', 'little'],
+  ['plus', 'more'],
+  ['moins', 'less'],
 ];
 
-const API_BASE = 'https://api.open-meteo.com/v1/forecast';
-const PARAMS = [
-  'current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,winddirection_10m,snowfall',
-  'daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,snowfall_sum,precipitation_probability_max,windspeed_10m_max',
-  'timezone=Europe%2FParis',
-  'forecast_days=3',
-].join('&');
+const DAYS_FR_EN = {
+  'LUNDI': 'Monday', 'MARDI': 'Tuesday', 'MERCREDI': 'Wednesday',
+  'JEUDI': 'Thursday', 'VENDREDI': 'Friday', 'SAMEDI': 'Saturday', 'DIMANCHE': 'Sunday',
+};
+const MONTHS_FR_EN = {
+  'JANVIER': 'January', 'FÉVRIER': 'February', 'FEVRIER': 'February',
+  'MARS': 'March', 'AVRIL': 'April', 'MAI': 'May', 'JUIN': 'June',
+  'JUILLET': 'July', 'AOÛT': 'August', 'AOUT': 'August',
+  'SEPTEMBRE': 'September', 'OCTOBRE': 'October', 'NOVEMBRE': 'November',
+  'DÉCEMBRE': 'December', 'DECEMBRE': 'December',
+};
 
-// ─── WMO code → { emoji, label } ──────────────────────────────────────────────
-function wmoInfo(code) {
-  if (code === 0)                    return { e: '☀️',  l: 'Clear sky' };
-  if (code === 1)                    return { e: '🌤️', l: 'Mainly clear' };
-  if (code === 2)                    return { e: '⛅',  l: 'Partly cloudy' };
-  if (code === 3)                    return { e: '☁️',  l: 'Overcast' };
-  if (code === 45 || code === 48)    return { e: '🌫️', l: 'Fog' };
-  if (code >= 51 && code <= 55)      return { e: '🌦️', l: 'Drizzle' };
-  if (code === 56 || code === 57)    return { e: '🌧️', l: 'Freezing drizzle' };
-  if (code >= 61 && code <= 65)      return { e: '🌧️', l: 'Rain' };
-  if (code === 66 || code === 67)    return { e: '🌧️', l: 'Freezing rain' };
-  if (code >= 71 && code <= 77)      return { e: '❄️',  l: 'Snow' };
-  if (code >= 80 && code <= 82)      return { e: '🌦️', l: 'Rain showers' };
-  if (code === 85 || code === 86)    return { e: '🌨️', l: 'Snow showers' };
-  if (code === 95)                   return { e: '⛈️',  l: 'Thunderstorm' };
-  if (code === 96 || code === 99)    return { e: '⛈️',  l: 'Thunderstorm + hail' };
-  return { e: '🌡️', l: 'Unknown' };
+function translate(text) {
+  if (!text) return '';
+  let t = text;
+  for (const [fr, en] of PHRASES) {
+    t = t.replace(new RegExp(fr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), en);
+  }
+  // Capitalise first letter of each sentence
+  t = t.replace(/(^|[.!?]\s+)([a-z])/g, (_, p, c) => _ + c.toUpperCase());
+  return t.trim();
 }
 
-function windDir(deg) {
-  const dirs = ['N','NE','E','SE','S','SW','W','NW'];
-  return dirs[Math.round(deg / 45) % 8];
+function translateDay(dayFR) {
+  return DAYS_FR_EN[dayFR.toUpperCase()] || dayFR;
+}
+function translateMonth(mFR) {
+  return MONTHS_FR_EN[mFR.toUpperCase()] || mFR;
 }
 
-function dayLabel(dateStr, i) {
-  if (i === 0) return ['Today', ''];
-  const d = new Date(dateStr + 'T12:00:00');
-  return [
-    d.toLocaleDateString('en-GB', { weekday: 'short' }),
-    d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
-  ];
+// ═══════════════════════════════════════════════════════════
+// ICON FROM TRANSLATED TEXT KEYWORDS
+// ═══════════════════════════════════════════════════════════
+function iconFromText(text) {
+  const t = text.toLowerCase();
+  if (/thunderstorm|lightning|storm/.test(t))              return '⛈️';
+  if (/snow shower|blizzard|blowing snow/.test(t))         return '🌨️';
+  if (/snowfall|fresh snow|snow flurr|^snow/.test(t))      return '❄️';
+  if (/freezing rain|black ice/.test(t))                   return '🌧️';
+  if (/shower/.test(t))                                    return '🌦️';
+  if (/rain/.test(t))                                      return '🌧️';
+  if (/fog|mist/.test(t))                                  return '🌫️';
+  if (/glorious|settled fine|very fine/.test(t))           return '☀️';
+  if (/fine weather|sunny/.test(t))                        return '🌤️';
+  if (/overcast|gloomy/.test(t))                           return '☁️';
+  if (/cloudy|cumulus/.test(t))                            return '⛅';
+  if (/clear sky|clear/.test(t))                           return '☀️';
+  if (/unsettled|uncertain|deterioration|cold front/.test(t)) return '🌥️';
+  return '🌡️';
 }
 
-function fmt(n, decimals = 0) {
-  if (n == null || isNaN(n)) return '—';
-  return Number(n).toFixed(decimals);
+// ═══════════════════════════════════════════════════════════
+// PARSE BULLETIN TEXT INTO DAY SECTIONS
+// ═══════════════════════════════════════════════════════════
+const DAY_RE = new RegExp(
+  `(${Object.keys(DAYS_FR_EN).join('|')})\\s+(\\d{1,2})\\s+(${Object.keys(MONTHS_FR_EN).join('|')})`,
+  'gi'
+);
+
+function parseBulletin(rawText) {
+  // Normalise whitespace
+  const text = rawText
+    .replace(/\r\n|\r/g, '\n')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+  // Extract meta
+  const period = (text.match(/PÉRIODE\s+DU\s+.+?(?=\n|$)/i) || [''])[0];
+  const reliability = (text.match(/[Ff]iabilité[^:]*?:\s*([^\n]+)/i) || [,''])[1].trim();
+  const avalanche = (text.match(/[Rr]isque\s+d['']avalanche\s*[:\(]?([^\n\)]+)/i) || [,''])[1].trim();
+  const bulletinDate = (text.match(/BULLETIN\s+QUOTIDIEN[,\s]+([^\n]+)/i) || [,''])[1].trim();
+
+  // Split on day headers
+  const matches = [...text.matchAll(DAY_RE)];
+  const days = [];
+
+  matches.forEach((m, i) => {
+    const dayFR   = m[1].toUpperCase();
+    const dateNum = m[2];
+    const monthFR = m[3].toUpperCase();
+    const start   = m.index + m[0].length;
+    const end     = i + 1 < matches.length ? matches[i + 1].index : text.length;
+    const section = text.slice(start, end).trim();
+
+    // Extract temp mini/maxi
+    const tempMatch = section.match(/mini\s*[:\-–]?\s*([+\-]?\d+)\s*°?C?\s*[,;\s]+maxi\s*[:\-–]?\s*([+\-]?\d+)\s*°?C?/i);
+    const tempMin = tempMatch ? parseInt(tempMatch[1]) : null;
+    const tempMax = tempMatch ? parseInt(tempMatch[2]) : null;
+
+    // Snow limit
+    const snowLimitMatch = section.match(/limite\s+pluie[‑\-–]neige\s*(?:vers|à|autour de)?\s*(\d+)\s*m/i);
+    const snowLimit = snowLimitMatch ? parseInt(snowLimitMatch[1]) : null;
+
+    // Isotherm 0°C
+    const iso0Match = section.match(/isotherme\s+0°C\s*(?:vers|à|autour de)?\s*([\d\s,‑\-–>à]+m)/i);
+    const iso0 = iso0Match ? iso0Match[1].trim() : null;
+
+    // Main description: first 2 meaningful lines, excluding temp/isotherm lines
+    const lines = section.split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 12)
+      .filter(l => !/^mini|^maxi|^isotherme|^risque|^pression|^altitude/i.test(l))
+      .filter(l => !/^\d+\s*(hpa|m\b)/i.test(l));
+    const descFR = lines.slice(0, 3).join(' ').replace(/\s+/g, ' ').trim();
+    const descEN = translate(descFR);
+
+    days.push({
+      dayEN: translateDay(dayFR),
+      date: `${dateNum} ${translateMonth(monthFR)}`,
+      icon: iconFromText(descEN || descFR),
+      descFR,
+      descEN,
+      tempMin,
+      tempMax,
+      snowLimit,
+      iso0,
+    });
+  });
+
+  return { period, reliability, avalanche, bulletinDate, days };
 }
 
-// ─── Build card HTML ───────────────────────────────────────────────────────────
-function buildCard(loc, data) {
-  const cur = data.current;
-  const daily = data.daily;
-  const wx = wmoInfo(cur.weathercode);
+// ═══════════════════════════════════════════════════════════
+// DETERMINE CONFIDENCE LEVEL BY DAY INDEX
+// ═══════════════════════════════════════════════════════════
+function confidence(reliability, dayIndex) {
+  // "assez bonne jusqu'à jeudi ‑ médiocre pour la suite"
+  // Days 0-2 = good, 3+ = low
+  if (!reliability) return 'normal';
+  const rl = reliability.toLowerCase();
+  const goodUntil = rl.includes('jusqu') ? (
+    rl.includes('jeudi') ? 2 :
+    rl.includes('vendredi') ? 3 :
+    rl.includes('mercredi') ? 1 : 2
+  ) : 99;
+  if (dayIndex > goodUntil) return 'low';
+  return 'normal';
+}
 
-  // current block
-  const currentHTML = `
-    <div class="current">
-      <div class="wx-icon">${wx.e}</div>
-      <div>
-        <div class="temp-big">${fmt(cur.temperature_2m)}°C</div>
-        <div class="wx-desc">${wx.l}</div>
-        <div class="feels">Feels like ${fmt(cur.apparent_temperature)}°C</div>
-      </div>
-      <div class="stats">
-        <div class="stat"><span class="stat-icon">💨</span> Wind <span class="val">${fmt(cur.windspeed_10m)} km/h ${windDir(cur.winddirection_10m)}</span></div>
-        <div class="stat"><span class="stat-icon">💧</span> Humidity <span class="val">${cur.relative_humidity_2m}%</span></div>
-        ${cur.snowfall > 0
-          ? `<div class="stat"><span class="stat-icon">❄️</span> Snowfall <span class="val">${fmt(cur.snowfall, 1)} cm</span></div>`
-          : cur.precipitation > 0
-          ? `<div class="stat"><span class="stat-icon">🌧️</span> Rain <span class="val">${fmt(cur.precipitation, 1)} mm</span></div>`
-          : ''}
-      </div>
-    </div>`;
+// ═══════════════════════════════════════════════════════════
+// FETCH CHAMONIX-METEO.COM VIA CORS PROXY
+// ═══════════════════════════════════════════════════════════
+const PROXY = 'https://api.allorigins.win/get?url=';
+const BULLETIN_URL = 'https://www.chamonix-meteo.com';
 
-  // 3-day forecast rows
-  const rows = daily.time.map((dateStr, i) => {
-    const [dayName, dateSub] = dayLabel(dateStr, i);
-    const wxD = wmoInfo(daily.weathercode[i]);
-    const maxSnow = Math.max(...daily.snowfall_sum);
-    const maxRain = Math.max(...(daily.precipitation_sum.map((p, j) => p - daily.snowfall_sum[j])));
-    const snow = daily.snowfall_sum[i] || 0;
-    const rain = Math.max(0, (daily.precipitation_sum[i] || 0) - snow);
-    const prob = daily.precipitation_probability_max[i] || 0;
+async function fetchBulletin() {
+  const res = await fetch(PROXY + encodeURIComponent(BULLETIN_URL));
+  if (!res.ok) throw new Error(`Proxy HTTP ${res.status}`);
+  const json = await res.json();
+  const html = json.contents || '';
 
-    const isSnow = snow > 0;
-    const isRain = rain > 0;
-    const barClass = isSnow ? 'snow' : isRain ? 'rain' : 'none';
-    const barWidth = isSnow
-      ? (maxSnow > 0 ? Math.max(8, Math.round((snow / maxSnow) * 100)) : 0)
-      : isRain
-      ? (maxRain > 0 ? Math.max(8, Math.round((rain / maxRain) * 100)) : 0)
-      : 0;
+  // Parse HTML → text
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  ['script', 'style', 'nav', 'header', 'footer', 'iframe', '.ads', '#ads',
+   '[class*="pub"]', '[class*="ad-"]'].forEach(sel => {
+    try { doc.querySelectorAll(sel).forEach(el => el.remove()); } catch {}
+  });
+  const rawText = (doc.body.textContent || '')
+    .replace(/\u00a0/g, ' ')
+    .replace(/‑/g, '-');
 
-    const precipLabel = isSnow
-      ? `<span class="type-snow">❄️ ${fmt(snow, 1)} cm snow</span>`
-      : isRain
-      ? `<span class="type-rain">🌧️ ${fmt(rain, 1)} mm rain</span>`
-      : `<span style="color:var(--muted)">No precipitation</span>`;
+  return parseBulletin(rawText);
+}
 
-    const probClass = prob >= 60 ? 'high' : prob >= 20 ? 'med' : 'low';
+// ═══════════════════════════════════════════════════════════
+// RENDER BULLETIN
+// ═══════════════════════════════════════════════════════════
+function renderBulletin({ period, reliability, avalanche, bulletinDate, days }) {
+  // Meta bar
+  const reliabilityEN = translate(reliability);
+  let relClass = 'reliability-good';
+  if (/poor|mediocre|médiocre/i.test(reliabilityEN + reliability)) relClass = 'reliability-poor';
+  else if (/uncertain|incertain|fairly|assez/i.test(reliabilityEN + reliability)) relClass = 'reliability-medium';
+
+  const periodEN = period
+    ? period.replace(DAY_RE, (_, d, n, m) => `${translateDay(d)} ${n} ${translateMonth(m)}`)
+           .replace(/PÉRIODE\s+DU\s+/i, '')
+           .replace(/\s+AU\s+/i, ' → ')
+    : '';
+
+  document.getElementById('meta-section').innerHTML = `
+    <div class="meta-bar">
+      ${bulletinDate ? `<div class="meta-item"><span class="label">📋 Bulletin</span><span class="val">${bulletinDate.replace(/MARDI|MERCREDI|JEUDI|VENDREDI|SAMEDI|DIMANCHE|LUNDI/gi, w => translateDay(w)).replace(/JANVIER|FÉVRIER|FEVRIER|MARS|AVRIL|MAI|JUIN|JUILLET|AOÛT|AOUT|SEPTEMBRE|OCTOBRE|NOVEMBRE|DÉCEMBRE|DECEMBRE/gi, m => translateMonth(m))}</span></div>` : ''}
+      ${periodEN ? `<div class="meta-item"><span class="label">📅 Period</span><span class="val">${periodEN}</span></div>` : ''}
+      ${reliability ? `<div class="meta-item"><span class="label">🎯 Reliability</span><span class="val ${relClass}">${reliabilityEN || reliability}</span></div>` : ''}
+      ${avalanche ? `<div class="meta-item"><span class="pill pill-avl">⚠️ Avalanche: ${translate(avalanche)}</span></div>` : ''}
+    </div>
+  `;
+
+  // Day cards
+  if (!days.length) {
+    document.getElementById('bulletin-section').innerHTML =
+      '<div class="forecast-grid"><div class="err">⚠️ Could not parse day forecasts from the bulletin. The site structure may have changed.</div></div>';
+    return;
+  }
+
+  // Today's date string for comparison
+  const todayStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
+
+  const cards = days.map((d, i) => {
+    const conf = confidence(reliability, i);
+    const isToday = d.date === todayStr;
+    const cardClass = isToday ? 'today' : conf === 'low' ? 'low-confidence' : '';
+
+    const tempLine = (d.tempMin !== null && d.tempMax !== null)
+      ? `<div class="dstat">🌡️ <span class="v">${d.tempMin > 0 ? '+' : ''}${d.tempMin}°C / ${d.tempMax > 0 ? '+' : ''}${d.tempMax}°C</span></div>`
+      : '';
+    const snowLine = d.snowLimit
+      ? `<div class="dstat">❄️ Rain/snow limit: <span class="snow-v">${d.snowLimit} m</span></div>`
+      : '';
+    const iso0Line = d.iso0
+      ? `<div class="dstat">🧊 0°C isotherm: <span class="v">${d.iso0}</span></div>`
+      : '';
 
     return `
-      <div class="day-row">
-        <div class="day-name">${dayName}<br><span class="date-sub">${dateSub}</span></div>
-        <div class="day-icon">${wxD.e}</div>
-        <div class="precip-bar-wrap">
-          <div class="precip-label">${precipLabel}</div>
-          <div class="bar-track"><div class="bar-fill ${barClass}" style="width:${barWidth}%"></div></div>
+      <div class="day-card ${cardClass}">
+        <div class="day-header">
+          <div class="day-icon">${d.icon}</div>
+          <div class="day-name-wrap">
+            <div class="day-name">${d.dayEN}</div>
+            <div class="day-date">${d.date}</div>
+          </div>
         </div>
-        <div class="temp-range">
-          <div class="temp-max">${fmt(daily.temperature_2m_max[i])}°</div>
-          <div class="temp-min">${fmt(daily.temperature_2m_min[i])}°</div>
+        <div class="condition-text">${d.descEN || d.descFR || '—'}</div>
+        <div class="day-stats">
+          ${tempLine}${snowLine}${iso0Line}
         </div>
-        <div class="prob-pill ${probClass}">${prob}%</div>
       </div>`;
   }).join('');
 
-  return `
-    <div class="loc-card">
-      <div class="loc-header">
-        <div>
-          <div class="name">${loc.name}</div>
-          <div class="elev">${loc.elev}</div>
-        </div>
-        <div class="badge">${loc.badge}</div>
-      </div>
-      ${currentHTML}
-      <div class="forecast-title">3-day forecast · rain &amp; snow</div>
-      <div class="forecast">${rows}</div>
-    </div>`;
+  document.getElementById('bulletin-section').innerHTML =
+    `<div class="section-title">🗓 Daily forecast · translated from chamonix-meteo.com</div>
+     <div class="forecast-grid">${cards}</div>`;
 }
 
-// ─── Fetch & render ────────────────────────────────────────────────────────────
-async function fetchWeather(loc) {
-  const url = `${API_BASE}?latitude=${loc.lat}&longitude=${loc.lon}&elevation=${loc.elevation}&${PARAMS}`;
+// ═══════════════════════════════════════════════════════════
+// OPEN-METEO CURRENT CONDITIONS
+// ═══════════════════════════════════════════════════════════
+const LOCATIONS = [
+  { name: 'Chamonix Village', elev: '1,035 m', badge: '🏔 1,035 m', lat: 45.9237, lon: 6.8694, elevation: 1035 },
+  { name: 'Aiguille du Midi', elev: '3,842 m · Summit station', badge: '🗻 3,842 m', lat: 45.8785, lon: 6.8879, elevation: 3842 },
+];
+const OM_BASE = 'https://api.open-meteo.com/v1/forecast';
+const OM_PARAMS = 'current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,winddirection_10m,snowfall&timezone=Europe%2FParis';
+
+function wmoInfo(c) {
+  if (c === 0)               return { e: '☀️',  l: 'Clear sky' };
+  if (c === 1)               return { e: '🌤️', l: 'Mainly clear' };
+  if (c === 2)               return { e: '⛅',  l: 'Partly cloudy' };
+  if (c === 3)               return { e: '☁️',  l: 'Overcast' };
+  if (c >= 45 && c <= 48)   return { e: '🌫️', l: 'Fog' };
+  if (c >= 51 && c <= 57)   return { e: '🌦️', l: 'Drizzle' };
+  if (c >= 61 && c <= 67)   return { e: '🌧️', l: 'Rain' };
+  if (c >= 71 && c <= 77)   return { e: '❄️',  l: 'Snow' };
+  if (c >= 80 && c <= 82)   return { e: '🌦️', l: 'Rain showers' };
+  if (c >= 85 && c <= 86)   return { e: '🌨️', l: 'Snow showers' };
+  if (c >= 95)              return { e: '⛈️',  l: 'Thunderstorm' };
+  return { e: '🌡️', l: 'Unknown' };
+}
+function windDir(deg) {
+  return ['N','NE','E','SE','S','SW','W','NW'][Math.round(deg / 45) % 8];
+}
+
+async function fetchLive(loc) {
+  const url = `${OM_BASE}?latitude=${loc.lat}&longitude=${loc.lon}&elevation=${loc.elevation}&${OM_PARAMS}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
 
-async function init() {
-  const app = document.getElementById('app');
-  app.innerHTML = '<div class="loader"><div class="spinner"></div>Fetching weather data…</div>';
-
-  const results = await Promise.allSettled(LOCATIONS.map(fetchWeather));
-
-  let html = '';
-  results.forEach((result, i) => {
+function renderLive(results) {
+  const html = results.map((result, i) => {
     const loc = LOCATIONS[i];
-    if (result.status === 'fulfilled') {
-      html += buildCard(loc, result.value);
-    } else {
-      html += `
-        <div class="loc-card" style="padding:24px">
-          <div class="name" style="margin-bottom:10px">${loc.name}</div>
-          <div class="error-msg">⚠️ Could not load weather data. Please try refreshing.</div>
-        </div>`;
+    if (result.status !== 'fulfilled') {
+      return `<div class="live-card" style="padding:20px"><div class="err">⚠️ Could not load live data for ${loc.name}</div></div>`;
     }
-  });
+    const cur = result.value.current;
+    const wx = wmoInfo(cur.weathercode);
+    const snow = cur.snowfall > 0 ? `<div class="lstat">❄️ Snowfall <span class="v">${cur.snowfall.toFixed(1)} cm</span></div>` : '';
+    const rain = cur.precipitation > 0 ? `<div class="lstat">🌧️ Rain <span class="v">${cur.precipitation.toFixed(1)} mm</span></div>` : '';
+    return `
+      <div class="live-card">
+        <div class="live-header">
+          <div><div class="lname">${loc.name}</div><div class="lelev">${loc.elev}</div></div>
+          <div class="lbadge">${loc.badge}</div>
+        </div>
+        <div class="live-body">
+          <div class="live-icon">${wx.e}</div>
+          <div>
+            <div class="live-temp">${Math.round(cur.temperature_2m)}°C</div>
+            <div class="live-desc">${wx.l}</div>
+            <div class="live-feels">Feels like ${Math.round(cur.apparent_temperature)}°C</div>
+          </div>
+          <div class="live-stats">
+            <div class="lstat">💨 <span class="v">${Math.round(cur.windspeed_10m)} km/h ${windDir(cur.winddirection_10m)}</span></div>
+            <div class="lstat">💧 Humidity <span class="v">${cur.relative_humidity_2m}%</span></div>
+            ${snow}${rain}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  document.getElementById('live-section').innerHTML = html;
+}
 
-  app.innerHTML = html;
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+async function init() {
+  const [bulletinResult, liveResults] = await Promise.all([
+    fetchBulletin().catch(e => ({ error: e.message })),
+    Promise.allSettled(LOCATIONS.map(fetchLive)),
+  ]);
 
-  const now = new Date().toLocaleString('en-GB', {
-    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZoneName: 'short'
-  });
-  document.getElementById('updated').textContent = `Updated ${now} · Source: Open-Meteo`;
+  if (bulletinResult.error) {
+    document.getElementById('bulletin-section').innerHTML =
+      `<div class="forecast-grid"><div class="err">⚠️ Could not load bulletin from chamonix-meteo.com: ${bulletinResult.error}<br>The site may be temporarily unavailable or blocking requests.</div></div>`;
+  } else {
+    renderBulletin(bulletinResult);
+  }
+
+  renderLive(liveResults);
+
+  document.getElementById('updated').textContent =
+    'Updated ' + new Date().toLocaleString('en-GB', {
+      day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZoneName: 'short'
+    });
 }
 
 init();
