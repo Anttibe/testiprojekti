@@ -435,12 +435,25 @@ async function fetchBulletin() {
 // ═══════════════════════════════════════════════════════════
 // RENDER BULLETIN
 // ═══════════════════════════════════════════════════════════
-function renderBulletin({ period, reliability, avalanche, bulletinDate, days }) {
+async function renderBulletin({ period, reliability, avalanche, bulletinDate, days }) {
+  // Translate all French strings in parallel via Google Translate
+  const [reliabilityEN, avalancheEN, bulletinDateEN, ...descENs] = await Promise.all([
+    googleTranslate(reliability).catch(() => reliability),
+    googleTranslate(avalanche).catch(() => avalanche),
+    googleTranslate(bulletinDate).catch(() => bulletinDate),
+    ...days.map(d => googleTranslate(d.descFR).catch(() => d.descFR)),
+  ]);
+
+  // Attach translations and icons to day objects
+  days.forEach((d, i) => {
+    d.descEN = descENs[i] || d.descFR;
+    d.icon   = iconFromText(d.descEN);
+  });
+
   // Meta bar
-  const reliabilityEN = translate(reliability);
   let relClass = 'reliability-good';
-  if (/poor|mediocre|médiocre/i.test(reliabilityEN + reliability)) relClass = 'reliability-poor';
-  else if (/uncertain|incertain|fairly|assez/i.test(reliabilityEN + reliability)) relClass = 'reliability-medium';
+  if (/poor|mediocre|bad/i.test(reliabilityEN)) relClass = 'reliability-poor';
+  else if (/fairly|moderate|uncertain/i.test(reliabilityEN)) relClass = 'reliability-medium';
 
   const periodEN = period
     ? period.replace(DAY_RE, (_, d, n, m) => `${translateDay(d)} ${n} ${translateMonth(m)}`)
