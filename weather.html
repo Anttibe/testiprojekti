@@ -480,7 +480,7 @@ async function renderBulletin({ period, reliability, avalanche, bulletinDate, da
   // Today's date string for comparison
   const todayStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
 
-  const cards = days.map((d, i) => {
+  const cards = days.filter(d => d.descEN || d.tempMin !== null).map((d, i) => {
     const conf = confidence(reliability, i);
     const isToday = d.date === todayStr;
     const cardClass = isToday ? 'today' : conf === 'low' ? 'low-confidence' : '';
