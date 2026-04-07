@@ -463,10 +463,10 @@ async function renderBulletin({ period, reliability, avalanche, bulletinDate, da
 
   document.getElementById('meta-section').innerHTML = `
     <div class="meta-bar">
-      ${bulletinDate ? `<div class="meta-item"><span class="label">📋 Bulletin</span><span class="val">${bulletinDate.replace(/MARDI|MERCREDI|JEUDI|VENDREDI|SAMEDI|DIMANCHE|LUNDI/gi, w => translateDay(w)).replace(/JANVIER|FÉVRIER|FEVRIER|MARS|AVRIL|MAI|JUIN|JUILLET|AOÛT|AOUT|SEPTEMBRE|OCTOBRE|NOVEMBRE|DÉCEMBRE|DECEMBRE/gi, m => translateMonth(m))}</span></div>` : ''}
+      ${bulletinDateEN ? `<div class="meta-item"><span class="label">📋 Bulletin</span><span class="val">${bulletinDateEN}</span></div>` : ''}
       ${periodEN ? `<div class="meta-item"><span class="label">📅 Period</span><span class="val">${periodEN}</span></div>` : ''}
-      ${reliability ? `<div class="meta-item"><span class="label">🎯 Reliability</span><span class="val ${relClass}">${reliabilityEN || reliability}</span></div>` : ''}
-      ${avalanche ? `<div class="meta-item"><span class="pill pill-avl">⚠️ Avalanche: ${translate(avalanche)}</span></div>` : ''}
+      ${reliabilityEN ? `<div class="meta-item"><span class="label">🎯 Reliability</span><span class="val ${relClass}">${reliabilityEN}</span></div>` : ''}
+      ${avalancheEN ? `<div class="meta-item"><span class="pill pill-avl">⚠️ Avalanche: ${avalancheEN}</span></div>` : ''}
     </div>
   `;
 
