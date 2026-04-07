@@ -268,158 +268,17 @@
 
 <script>
 // ═══════════════════════════════════════════════════════════
-// TRANSLATION TABLE  (French phrase → English, longest first)
+// GOOGLE TRANSLATE  (unofficial free endpoint, no API key)
 // ═══════════════════════════════════════════════════════════
-const PHRASES = [
-  // Conditions
-  ['grand beau temps sous tous rapports', 'glorious weather in every respect'],
-  ['grand beau temps', 'glorious weather'],
-  ['très beau temps', 'very fine weather'],
-  ['beau temps', 'fine weather'],
-  ['beau fixe', 'settled fine weather'],
-  ['beau à très beau', 'fine to very fine'],
-  ['beau et chaud', 'fine and warm'],
-  ['grand beau', 'glorious'],
-  ['chaleur estivale sans excès', 'pleasantly summer-like warmth'],
-  ['chaleur estivale', 'summer-like warmth'],
-  ['chaleur caniculaire', 'scorching heat'],
-  ['chaleur', 'warmth'],
-  ['coup de froid', 'cold snap'],
-  ['temps gris', 'grey skies'],
-  ['temps maussade', 'gloomy weather'],
-  ['temps maussade', 'gloomy conditions'],
-  ['temps très incertain', 'very uncertain conditions'],
-  ['temps incertain', 'uncertain conditions'],
-  ['temps variable', 'variable conditions'],
-  ['temps perturbé', 'unsettled weather'],
-  ['premier refroidissement', 'first cold spell'],
-  ['refroidissement', 'temperature drop'],
-  ['dégradation', 'deterioration'],
-  ['amélioration', 'improvement'],
-  // Sky
-  ['ciel clair', 'clear sky'],
-  ['ciel voilé', 'veiled sky'],
-  ['ciel couvert', 'overcast sky'],
-  ['ciel nuageux', 'cloudy sky'],
-  ['ciel dégagé', 'clear sky'],
-  ['quelques nuages', 'some clouds'],
-  ['nuages épars', 'scattered clouds'],
-  ['voile de cirrus', 'cirrus veil'],
-  ['cirrus', 'high cirrus clouds'],
-  ['cumulus de beau temps', 'fair-weather cumulus'],
-  ['quelques cumulus', 'some cumulus clouds'],
-  ['cumulus', 'cumulus clouds'],
-  ['stratus', 'low stratus cloud'],
-  ['brouillard', 'fog'],
-  ['brume', 'mist'],
-  ['nuageux', 'cloudy'],
-  ['couvert', 'overcast'],
-  ['ensoleillement', 'sunshine'],
-  ['ensoleillé', 'sunny'],
-  ['soleil', 'sun'],
-  // Precip
-  ['limite pluie‑neige', 'rain-snow limit'],
-  ['limite pluie-neige', 'rain-snow limit'],
-  ['pluie verglaçante', 'freezing rain'],
-  ['pluie', 'rain'],
-  ['averses de neige', 'snow showers'],
-  ['averse de neige', 'snow shower'],
-  ['averses neigeuses', 'snowy showers'],
-  ['quelques averses', 'scattered showers'],
-  ['averses', 'showers'],
-  ['flocons de neige', 'snowflakes'],
-  ['flocons', 'snow flurries'],
-  ['chutes de neige', 'snowfall'],
-  ['chute de neige', 'snowfall'],
-  ['neige fraîche', 'fresh snow'],
-  ['neige soufflée', 'blowing snow'],
-  ['neige', 'snow'],
-  ['verglas', 'black ice'],
-  ['grêle', 'hail'],
-  ['précipitations', 'precipitation'],
-  ['pas de précipitations', 'no precipitation'],
-  ['sans précipitation', 'no precipitation'],
-  // Wind
-  ['vent violent', 'violent wind'],
-  ['vent fort', 'strong wind'],
-  ['vent modéré', 'moderate wind'],
-  ['vent faible', 'light wind'],
-  ['vent nul', 'calm'],
-  ['vent de secteur nord', 'northerly wind'],
-  ['flux NW fort', 'strong NW airflow'],
-  ['flux NW', 'NW airflow'],
-  ['flux SW', 'SW airflow'],
-  ['flux NE', 'NE airflow'],
-  ['flux N', 'northerly flow'],
-  ['rafales', 'gusts'],
-  ['vent', 'wind'],
-  ['turbulences', 'turbulence'],
-  ['calme', 'calm'],
-  // Temps of day
-  ['en début de matinée', 'in the early morning'],
-  ['en matinée', 'in the morning'],
-  ['début d\'après‑midi', 'early afternoon'],
-  ['l\'après‑midi', 'in the afternoon'],
-  ['en soirée', 'in the evening'],
-  ['la nuit', 'during the night'],
-  ['à l\'aube', 'at dawn'],
-  ['au lever du jour', 'at sunrise'],
-  ['en fin de journée', 'by end of day'],
-  ['dernier jour', 'last fine day'],
-  // Temperature qualifiers
-  ['températures', 'temperatures'],
-  ['température', 'temperature'],
-  ['au‑dessus des normales saisonnières', 'above seasonal norms'],
-  ['au-dessus des normales', 'above average'],
-  ['nettement au-dessus', 'well above average'],
-  ['isotherme 0°C', '0°C isotherm'],
-  ['isotherme -10°C', '-10°C isotherm'],
-  ['isotherme', 'isotherm'],
-  ['vallée', 'valley'],
-  ['altitude', 'altitude'],
-  ['sommet', 'summit'],
-  ['versant', 'slope'],
-  ['massif', 'massif'],
-  // Specific
-  ['suite', 'continuing'],
-  ['dorsale d\'altitude', 'upper-level ridge'],
-  ['anticyclone', 'high-pressure system'],
-  ['dépression', 'low-pressure system'],
-  ['front froid', 'cold front'],
-  ['front chaud', 'warm front'],
-  ['air froid', 'cold air'],
-  ['air chaud', 'warm air'],
-  ['air saharien', 'Saharan air'],
-  ['risque d\'avalanche', 'avalanche risk'],
-  ['risque limité', 'limited risk'],
-  ['enneigement', 'snow cover'],
-  // Common connectors
-  ['sous tous rapports', 'in every respect'],
-  ['à l\'aiguille', 'at the Aiguille'],
-  ['en vallée', 'in the valley'],
-  ['par endroits', 'in places'],
-  ['localement', 'locally'],
-  ['probablement', 'probably'],
-  ['notamment', 'notably'],
-  ['ensuite', 'then'],
-  ['puis', 'then'],
-  ['avec', 'with'],
-  ['sans', 'without'],
-  ['vers', 'around'],
-  ['avant', 'before'],
-  ['après', 'after'],
-  ['début', 'start of'],
-  ['fin', 'end of'],
-  ['entre', 'between'],
-  ['et', 'and'],
-  ['ou', 'or'],
-  ['sur', 'over'],
-  ['très', 'very'],
-  ['assez', 'quite'],
-  ['peu', 'little'],
-  ['plus', 'more'],
-  ['moins', 'less'],
-];
+async function googleTranslate(text) {
+  if (!text || !text.trim()) return text;
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fr&tl=en&dt=t&q=${encodeURIComponent(text)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Google Translate HTTP ${res.status}`);
+  const data = await res.json();
+  // data[0] = array of [translatedSegment, originalSegment, ...]
+  return data[0].map(s => s[0]).join('').trim();
+}
 
 const DAYS_FR_EN = {
   'LUNDI': 'Monday', 'MARDI': 'Tuesday', 'MERCREDI': 'Wednesday',
@@ -432,17 +291,6 @@ const MONTHS_FR_EN = {
   'SEPTEMBRE': 'September', 'OCTOBRE': 'October', 'NOVEMBRE': 'November',
   'DÉCEMBRE': 'December', 'DECEMBRE': 'December',
 };
-
-function translate(text) {
-  if (!text) return '';
-  let t = text;
-  for (const [fr, en] of PHRASES) {
-    t = t.replace(new RegExp(fr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), en);
-  }
-  // Capitalise first letter of each sentence
-  t = t.replace(/(^|[.!?]\s+)([a-z])/g, (_, p, c) => _ + c.toUpperCase());
-  return t.trim();
-}
 
 function translateDay(dayFR) {
   return DAYS_FR_EN[dayFR.toUpperCase()] || dayFR;
