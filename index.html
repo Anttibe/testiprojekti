@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encouragement Bot</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #a0aec0;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .chat-box {
+      width: 100%;
+      max-width: 600px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .messages {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 200px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .message {
+      padding: 12px 16px;
+      border-radius: 12px;
+      max-width: 85%;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+      background: #0f3460;
+      border: 1px solid #1a5276;
+      align-self: flex-end;
+    }
+
+    .message.bot {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      align-self: flex-start;
+    }
+
+    .message.bot .emoji {
+      font-size: 1.4rem;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input[type="text"]::placeholder { color: #718096; }
+    input[type="text"]:focus { border-color: #63b3ed; }
+
+    button {
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: none;
+      background: #3182ce;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: #2b6cb0; }
+    button:active { background: #2c5282; }
+  </style>
+</head>
+<body>
+
+<h1>✨ Encouragement Bot</h1>
+<p class="subtitle">Tell me what's on your mind.</p>
+
+<div class="chat-box">
+  <div class="messages" id="messages">
+    <div class="message bot">
+      <span class="emoji">👋</span>
+      Hey! What's going on? I'm here for you.
+    </div>
+  </div>
+  <div class="input-row">
+    <input type="text" id="userInput" placeholder="Type something..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+  const responses = [
+    { emoji: "🔥", text: "You are absolutely crushing it. Keep going!" },
+    { emoji: "💪", text: "Believe in yourself — you've got more strength than you know." },
+    { emoji: "🌟", text: "Every step forward counts, no matter how small." },
+    { emoji: "🚀", text: "You're capable of amazing things. Don't give up now!" },
+    { emoji: "🌈", text: "Hard times are just proof that you can handle hard things." },
+    { emoji: "🎯", text: "You're closer to your goal than you think. Stay the course." },
+    { emoji: "💡", text: "Challenges are just opportunities in disguise — and you're ready for them." },
+    { emoji: "🏆", text: "Winners aren't people who never fail. They're people who never quit. That's you." },
+    { emoji: "🌻", text: "You bring something unique to this world that no one else can." },
+    { emoji: "❤️", text: "It's okay to rest. Just don't give up. You've got this." },
+    { emoji: "⚡", text: "Your potential is limitless. The only limit is the one you set." },
+    { emoji: "🎉", text: "Look how far you've come already — that's worth celebrating!" },
+    { emoji: "🌊", text: "Even the roughest waves eventually calm. You'll get through this." },
+    { emoji: "🦁", text: "Be brave. You are braver than you feel right now." },
+    { emoji: "🌙", text: "Even on your darkest days, you are worthy of love and good things." },
+  ];
+
+  function sendMessage() {
+    const input = document.getElementById('userInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage(text, 'user');
+    input.value = '';
+
+    setTimeout(() => {
+      const pick = responses[Math.floor(Math.random() * responses.length)];
+      addMessage(pick.text, 'bot', pick.emoji);
+    }, 400);
+  }
+
+  function addMessage(text, type, emoji = null) {
+    const messages = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = `message ${type}`;
+    if (emoji) {
+      const span = document.createElement('span');
+      span.className = 'emoji';
+      span.textContent = emoji;
+      div.appendChild(span);
+    }
+    div.appendChild(document.createTextNode(text));
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  document.getElementById('userInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendMessage();
+  });
+</script>
+
+</body>
+</html>
