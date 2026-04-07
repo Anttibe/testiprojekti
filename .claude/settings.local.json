@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git --version)",
+      "Bash(gh --version)",
+      "Bash(winget install:*)",
+      "Bash(gh auth:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /c/Users/antti/Documents/testiprojekti && git add -A && git diff --cached --quiet || (git commit -m \"Update $(git diff --cached --name-only | tr '\\n' ' ' | sed 's/ $//')\" && git push) 2>/dev/null || true",
+            "timeout": 30,
+            "statusMessage": "Syncing to GitHub..."
+          }
+        ]
+      }
+    ]
+  }
+}
