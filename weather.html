@@ -374,14 +374,11 @@ function parseBulletin(rawText) {
       .filter(l => !/^mini|^maxi|^isotherme|^risque|^pression|^altitude/i.test(l))
       .filter(l => !/^\d+\s*(hpa|m\b)/i.test(l));
     const descFR = lines.slice(0, 3).join(' ').replace(/\s+/g, ' ').trim();
-    const descEN = translate(descFR);
 
     days.push({
       dayEN: translateDay(dayFR),
       date: `${dateNum} ${translateMonth(monthFR)}`,
-      icon: iconFromText(descEN || descFR),
       descFR,
-      descEN,
       tempMin,
       tempMax,
       snowLimit,
