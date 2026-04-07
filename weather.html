@@ -598,7 +598,7 @@ async function init() {
     document.getElementById('bulletin-section').innerHTML =
       `<div class="forecast-grid"><div class="err">⚠️ Could not load bulletin from chamonix-meteo.com: ${bulletinResult.error}<br>The site may be temporarily unavailable or blocking requests.</div></div>`;
   } else {
-    renderBulletin(bulletinResult);
+    await renderBulletin(bulletinResult);
   }
 
   renderLive(liveResults);
