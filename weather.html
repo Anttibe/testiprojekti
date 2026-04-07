@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chamonix Weather</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0b1120;
+      --surface:   #111827;
+      --card:      #1a2438;
+      --border:    rgba(255,255,255,0.08);
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --blue:      #3b82f6;
+      --cyan:      #22d3ee;
+      --snow:      #bae6fd;
+      --rain:      #60a5fa;
+      --sun:       #fbbf24;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    header h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    header h1 span { color: var(--cyan); }
+    header p {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+    #updated {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── Layout ── */
+    .locations {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ── Location card ── */
+    .loc-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .loc-header {
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .loc-header .name { font-size: 1.1rem; font-weight: 700; }
+    .loc-header .elev {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .loc-header .badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 99px;
+      background: rgba(34,211,238,0.12);
+      color: var(--cyan);
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    /* ── Current conditions ── */
+    .current {
+      padding: 20px 22px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0 18px;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .current .wx-icon { font-size: 3.8rem; line-height: 1; }
+    .current .temp-big {
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .current .wx-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .current .feels {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .stats {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .stat .val { color: var(--text); font-weight: 600; }
+    .stat-icon { font-size: 0.95rem; }
+
+    /* ── 3-day forecast ── */
+    .forecast-title {
+      padding: 16px 22px 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .forecast {
+      padding: 0 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .day-row {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 80px 36px 1fr auto auto;
+      align-items: center;
+      gap: 10px;
+    }
+    .day-name { font-size: 0.88rem; font-weight: 600; }
+    .day-name .date-sub { font-size: 0.72rem; color: var(--muted); font-weight: 400; }
+    .day-icon { font-size: 1.5rem; text-align: center; }
+
+    .precip-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .precip-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+    .precip-label .type-snow { color: var(--snow); }
+    .precip-label .type-rain { color: var(--rain); }
+    .bar-track {
+      height: 5px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 0.6s ease;
+    }
+    .bar-fill.snow { background: var(--snow); }
+    .bar-fill.rain { background: var(--rain); }
+    .bar-fill.none { background: rgba(255,255,255,0.15); width: 0 !important; }
+
+    .temp-range {
+      text-align: right;
+      white-space: nowrap;
+    }
+    .temp-max { font-size: 0.95rem; font-weight: 700; }
+    .temp-min { font-size: 0.78rem; color: var(--muted); }
+
+    .prob-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      text-align: center;
+      min-width: 38px;
+    }
+    .prob-pill.high { background: rgba(96,165,250,0.2); color: var(--rain); }
+    .prob-pill.med  { background: rgba(96,165,250,0.1); color: var(--muted); }
+    .prob-pill.low  { background: rgba(255,255,255,0.05); color: var(--muted); }
+
+    /* ── Loading / Error ── */
+    .loader {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--cyan);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-msg {
+      color: #f87171;
+      background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      margin: 8px 0;
+    }
+
+    @media (max-width: 420px) {
+      .day-row { grid-template-columns: 70px 30px 1fr auto; }
+      .prob-pill { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>⛰️ <span>Chamonix</span> Weather</h1>
+  <p>Chamonix Village · Aiguille du Midi — rain &amp; snow forecast</p>
+  <div id="updated"></div>
+</header>
+
+<div class="locations" id="app">
+  <div class="loader"><div class="spinner"></div>Loading weather data…</div>
+</div>
+
+<script>
+// ─── Config ───────────────────────────────────────────────────────────────────
+const LOCATIONS = [
+  {
+    id: 'chamonix',
+    name: 'Chamonix Village',
+    badge: '🏔 1,035 m',
+    elev: '1,035 m · Mont-Blanc Massif',
+    lat: 45.9237, lon: 6.8694,
+    elevation: 1035,
+  },
+  {
+    id: 'aiguille',
+    name: 'Aiguille du Midi',
+    badge: '🗻 3,842 m',
+    elev: '3,842 m · Summit station',
+    lat: 45.8785, lon: 6.8879,
+    elevation: 3842,
+  },
+];
+
+const API_BASE = 'https://api.open-meteo.com/v1/forecast';
+const PARAMS = [
+  'current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,winddirection_10m,snowfall',
+  'daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,snowfall_sum,precipitation_probability_max,windspeed_10m_max',
+  'timezone=Europe%2FParis',
+  'forecast_days=3',
+].join('&');
+
+// ─── WMO code → { emoji, label } ──────────────────────────────────────────────
+function wmoInfo(code) {
+  if (code === 0)                    return { e: '☀️',  l: 'Clear sky' };
+  if (code === 1)                    return { e: '🌤️', l: 'Mainly clear' };
+  if (code === 2)                    return { e: '⛅',  l: 'Partly cloudy' };
+  if (code === 3)                    return { e: '☁️',  l: 'Overcast' };
+  if (code === 45 || code === 48)    return { e: '🌫️', l: 'Fog' };
+  if (code >= 51 && code <= 55)      return { e: '🌦️', l: 'Drizzle' };
+  if (code === 56 || code === 57)    return { e: '🌧️', l: 'Freezing drizzle' };
+  if (code >= 61 && code <= 65)      return { e: '🌧️', l: 'Rain' };
+  if (code === 66 || code === 67)    return { e: '🌧️', l: 'Freezing rain' };
+  if (code >= 71 && code <= 77)      return { e: '❄️',  l: 'Snow' };
+  if (code >= 80 && code <= 82)      return { e: '🌦️', l: 'Rain showers' };
+  if (code === 85 || code === 86)    return { e: '🌨️', l: 'Snow showers' };
+  if (code === 95)                   return { e: '⛈️',  l: 'Thunderstorm' };
+  if (code === 96 || code === 99)    return { e: '⛈️',  l: 'Thunderstorm + hail' };
+  return { e: '🌡️', l: 'Unknown' };
+}
+
+function windDir(deg) {
+  const dirs = ['N','NE','E','SE','S','SW','W','NW'];
+  return dirs[Math.round(deg / 45) % 8];
+}
+
+function dayLabel(dateStr, i) {
+  if (i === 0) return ['Today', ''];
+  const d = new Date(dateStr + 'T12:00:00');
+  return [
+    d.toLocaleDateString('en-GB', { weekday: 'short' }),
+    d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+  ];
+}
+
+function fmt(n, decimals = 0) {
+  if (n == null || isNaN(n)) return '—';
+  return Number(n).toFixed(decimals);
+}
+
+// ─── Build card HTML ───────────────────────────────────────────────────────────
+function buildCard(loc, data) {
+  const cur = data.current;
+  const daily = data.daily;
+  const wx = wmoInfo(cur.weathercode);
+
+  // current block
+  const currentHTML = `
+    <div class="current">
+      <div class="wx-icon">${wx.e}</div>
+      <div>
+        <div class="temp-big">${fmt(cur.temperature_2m)}°C</div>
+        <div class="wx-desc">${wx.l}</div>
+        <div class="feels">Feels like ${fmt(cur.apparent_temperature)}°C</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="stat-icon">💨</span> Wind <span class="val">${fmt(cur.windspeed_10m)} km/h ${windDir(cur.winddirection_10m)}</span></div>
+        <div class="stat"><span class="stat-icon">💧</span> Humidity <span class="val">${cur.relative_humidity_2m}%</span></div>
+        ${cur.snowfall > 0
+          ? `<div class="stat"><span class="stat-icon">❄️</span> Snowfall <span class="val">${fmt(cur.snowfall, 1)} cm</span></div>`
+          : cur.precipitation > 0
+          ? `<div class="stat"><span class="stat-icon">🌧️</span> Rain <span class="val">${fmt(cur.precipitation, 1)} mm</span></div>`
+          : ''}
+      </div>
+    </div>`;
+
+  // 3-day forecast rows
+  const rows = daily.time.map((dateStr, i) => {
+    const [dayName, dateSub] = dayLabel(dateStr, i);
+    const wxD = wmoInfo(daily.weathercode[i]);
+    const maxSnow = Math.max(...daily.snowfall_sum);
+    const maxRain = Math.max(...(daily.precipitation_sum.map((p, j) => p - daily.snowfall_sum[j])));
+    const snow = daily.snowfall_sum[i] || 0;
+    const rain = Math.max(0, (daily.precipitation_sum[i] || 0) - snow);
+    const prob = daily.precipitation_probability_max[i] || 0;
+
+    const isSnow = snow > 0;
+    const isRain = rain > 0;
+    const barClass = isSnow ? 'snow' : isRain ? 'rain' : 'none';
+    const barWidth = isSnow
+      ? (maxSnow > 0 ? Math.max(8, Math.round((snow / maxSnow) * 100)) : 0)
+      : isRain
+      ? (maxRain > 0 ? Math.max(8, Math.round((rain / maxRain) * 100)) : 0)
+      : 0;
+
+    const precipLabel = isSnow
+      ? `<span class="type-snow">❄️ ${fmt(snow, 1)} cm snow</span>`
+      : isRain
+      ? `<span class="type-rain">🌧️ ${fmt(rain, 1)} mm rain</span>`
+      : `<span style="color:var(--muted)">No precipitation</span>`;
+
+    const probClass = prob >= 60 ? 'high' : prob >= 20 ? 'med' : 'low';
+
+    return `
+      <div class="day-row">
+        <div class="day-name">${dayName}<br><span class="date-sub">${dateSub}</span></div>
+        <div class="day-icon">${wxD.e}</div>
+        <div class="precip-bar-wrap">
+          <div class="precip-label">${precipLabel}</div>
+          <div class="bar-track"><div class="bar-fill ${barClass}" style="width:${barWidth}%"></div></div>
+        </div>
+        <div class="temp-range">
+          <div class="temp-max">${fmt(daily.temperature_2m_max[i])}°</div>
+          <div class="temp-min">${fmt(daily.temperature_2m_min[i])}°</div>
+        </div>
+        <div class="prob-pill ${probClass}">${prob}%</div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="loc-card">
+      <div class="loc-header">
+        <div>
+          <div class="name">${loc.name}</div>
+          <div class="elev">${loc.elev}</div>
+        </div>
+        <div class="badge">${loc.badge}</div>
+      </div>
+      ${currentHTML}
+      <div class="forecast-title">3-day forecast · rain &amp; snow</div>
+      <div class="forecast">${rows}</div>
+    </div>`;
+}
+
+// ─── Fetch & render ────────────────────────────────────────────────────────────
+async function fetchWeather(loc) {
+  const url = `${API_BASE}?latitude=${loc.lat}&longitude=${loc.lon}&elevation=${loc.elevation}&${PARAMS}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+async function init() {
+  const app = document.getElementById('app');
+  app.innerHTML = '<div class="loader"><div class="spinner"></div>Fetching weather data…</div>';
+
+  const results = await Promise.allSettled(LOCATIONS.map(fetchWeather));
+
+  let html = '';
+  results.forEach((result, i) => {
+    const loc = LOCATIONS[i];
+    if (result.status === 'fulfilled') {
+      html += buildCard(loc, result.value);
+    } else {
+      html += `
+        <div class="loc-card" style="padding:24px">
+          <div class="name" style="margin-bottom:10px">${loc.name}</div>
+          <div class="error-msg">⚠️ Could not load weather data. Please try refreshing.</div>
+        </div>`;
+    }
+  });
+
+  app.innerHTML = html;
+
+  const now = new Date().toLocaleString('en-GB', {
+    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZoneName: 'short'
+  });
+  document.getElementById('updated').textContent = `Updated ${now} · Source: Open-Meteo`;
+}
+
+init();
+</script>
+</body>
+</html>

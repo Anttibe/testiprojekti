@@ -4,7 +4,14 @@
       "Bash(git --version)",
       "Bash(gh --version)",
       "Bash(winget install:*)",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(git reset:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:api.open-meteo.com)",
+      "Bash(curl -s \"https://api.open-meteo.com/v1/forecast?latitude=45.9237&longitude=6.8694&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,winddirection_10m,snowfall&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,snowfall_sum,precipitation_probability_max,windspeed_10m_max&hourly=temperature_2m,precipitation,snowfall,weathercode,precipitation_probability&timezone=Europe%2FParis&forecast_days=3\")",
+      "Bash(curl -s \"https://api.open-meteo.com/v1/forecast?latitude=45.8785&longitude=6.8879&elevation=3842&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,winddirection_10m,snowfall&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,snowfall_sum,precipitation_probability_max,windspeed_10m_max&hourly=temperature_2m,precipitation,snowfall,weathercode,precipitation_probability&timezone=Europe%2FParis&forecast_days=3\")",
+      "Bash(curl:*)"
     ]
   },
   "hooks": {
