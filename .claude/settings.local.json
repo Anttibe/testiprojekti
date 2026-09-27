@@ -14,7 +14,9 @@
       "Bash(curl:*)",
       "Bash(start:*)",
       "WebFetch(domain:www.chamonix-meteo.com)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:www.chamonix.com)",
+      "WebFetch(domain:en.chamonix.com)"
     ]
   },
   "hooks": {
