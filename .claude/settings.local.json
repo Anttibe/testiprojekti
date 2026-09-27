@@ -20,7 +20,11 @@
       "Bash(git add:*)",
       "Bash(python fetch_aapl_html.py)",
       "Bash(explorer \"$\\(pwd\\)/aapl_prices.html\")",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(python:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(docker compose up:*)",
+      "Bash(psql --version)"
     ]
   },
   "hooks": {
