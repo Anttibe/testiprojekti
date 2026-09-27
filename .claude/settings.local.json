@@ -16,7 +16,11 @@
       "WebFetch(domain:www.chamonix-meteo.com)",
       "WebSearch",
       "WebFetch(domain:www.chamonix.com)",
-      "WebFetch(domain:en.chamonix.com)"
+      "WebFetch(domain:en.chamonix.com)",
+      "Bash(git add:*)",
+      "Bash(python fetch_aapl_html.py)",
+      "Bash(explorer \"$\\(pwd\\)/aapl_prices.html\")",
+      "Bash(powershell:*)"
     ]
   },
   "hooks": {
