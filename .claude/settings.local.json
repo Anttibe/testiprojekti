@@ -24,7 +24,9 @@
       "Bash(python:*)",
       "Bash(docker-compose up:*)",
       "Bash(docker compose up:*)",
-      "Bash(psql --version)"
+      "Bash(psql --version)",
+      "Bash(ls -la /c/Users/antti/Documents/Algotrading/tests/unit/*.py)",
+      "Bash(wc:*)"
     ]
   },
   "hooks": {
